@@ -1,0 +1,33 @@
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+app = Flask(__name__)
+CORS(app)
+
+# Initialize Firebase (You'll need a serviceAccountKey.json for actual use)
+# For demo purposes, we'll assume it's initialized or use dummy data
+# cred = credentials.Certificate('serviceAccountKey.json')
+# firebase_admin.initialize_app(cred)
+# db = firestore.client()
+
+@app.route('/')
+def home():
+    return jsonify({"message": "GravityHub Backend API is running!"})
+
+@app.route('/api/tasks', methods=['GET', 'POST'])
+def handle_tasks():
+    if request.method == 'POST':
+        data = request.json
+        # Logic to save to Firestore
+        return jsonify({"status": "success", "task": data}), 201
+    else:
+        # Logic to fetch from Firestore
+        tasks = [] # dummy
+        return jsonify(tasks)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
